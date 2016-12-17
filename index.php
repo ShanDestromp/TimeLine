@@ -1,0 +1,1 @@
+/mnt/tardis/camera/index.php
