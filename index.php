@@ -3,7 +3,10 @@
 
 $RootDir = "./camera/";
 $Fuzzy = "2 minutes"; // Filter for possible related files; ± 2 minutes 00 seconds.
-$DateFormat = "Y-m-d H:i:s"; //See PHP's date formatting for alternatives
+$DateFormat = "Y-m-d H:i:s"; //FOR DISPLAY ONLY See PHP's date formatting for alternatives
+$IMGFormat = "jpg"; //file extension of auto-generated images
+$VIDFormat = "mp4"; //file extension of auto-generated videos
+$FileCruft = "01_"; //If your generated-files contain any prefix prior to the date code enter it here.
 
 /* **********END CONFIGURATION ********** */
 clearstatcache();
@@ -28,7 +31,7 @@ function getAllFiles( $outerDir , $x){
 //Format of $CameraFiles[CAMERA_NAME][NUMERICAL_KEY] = filename (no ext)
 function getCameraFiles($Cameras, $RootDir){
 	for ($i = 0; $i < count($Cameras); $i++){
-			$tFiles = getAllFiles($RootDir.$Cameras[$i],'mp4'); 
+			$tFiles = getAllFiles($RootDir.$Cameras[$i],$VIDFormat); 
 			for ($x = 0; $x < count($tFiles); $x++){
 				$CameraFiles[$Cameras[$i]][] = $tFiles[$x];;
 			}
@@ -49,7 +52,7 @@ function scale_to_width ($filename, $targetwidth) {
 }
 
 function dateFromFile($file){
-	$file = ltrim($file, "01_");
+	$file = ltrim($file, $FileCruft);
 	$date = date_create_from_format('YmdHis',$file);
 	return($date);
 }
@@ -86,21 +89,20 @@ if($_GET['index'] == "" || !isset($_GET['index'])){
 			for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
 				echo "<td>";
 				$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x]);
-				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg", 250);
+				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
 				echo date_format($DateStamp, $DateFormat);
 				echo "</td>";
 			}
 			echo "</tr><tr>";
 			//displays screenshot with hyperlink
 			for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
-				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg", 250);
-				echo "<td><a href='./?index=video&camera=".$Cameras[$i]."&video=".$CameraFiles[$Cameras[$i]][$x]."'><img src='".$RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg' height='".$tWidth."' /></a></td>";
+				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
+				echo "<td><a href='./?index=video&camera=".$Cameras[$i]."&video=".$CameraFiles[$Cameras[$i]][$x]."'><img src='".$RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat."' height='".$tWidth."' /></a></td>";
 			}
 			
 			echo "</tr><tr>";
 			//Quick Delete button
 			for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
-				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg", 250);
 				echo "<td><a class='unlink' href='./?index=unlink&camera=".$Cameras[$i]."&video=".$CameraFiles[$Cameras[$i]][$x]."'>QUICK DELETE</a></td>";
 			}
 
@@ -110,7 +112,7 @@ if($_GET['index'] == "" || !isset($_GET['index'])){
 	}
 }
 elseif($_GET['index'] == "video"){
-		if(is_file($RootDir.$_GET['camera']."/".$_GET['video'].".mp4")){
+		if(is_file($RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat)){
 			css();
 			
 			$DateStamp = dateFromFile($_GET['video']);
@@ -119,7 +121,7 @@ elseif($_GET['index'] == "video"){
 			
 			echo date_format($DateStamp, $DateFormat)."<br />";
 			
-			?><video class="video" controls><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".mp4"?>" type="audio/mpeg"></video>
+			?><video class="video" controls><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat?>" type="audio/mpeg"></video>
 			<br />
 			<align='center'><a href="./?index=unlink&camera=<?php echo $_GET['camera'];?>&video=<?php echo $_GET['video'];?>"> DELETE THIS</a></align>
 			<div class="related">
@@ -133,9 +135,9 @@ elseif($_GET['index'] == "video"){
 					for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
 						$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x]);
 						if($DateStamp < $Future && $DateStamp > $Past){
-							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg", 250);
-							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg", 250);
-							echo "<a href='./?index=video&camera=".$Cameras[$i]."&video=".$CameraFiles[$Cameras[$i]][$x]."'><img src='".$RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".jpg' height='".$tWidth."' /></a>";
+							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
+							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
+							echo "<a href='./?index=video&camera=".$Cameras[$i]."&video=".$CameraFiles[$Cameras[$i]][$x]."'><img src='".$RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat."' height='".$tWidth."' /></a>";
 						}
 					}
 				}
@@ -147,8 +149,8 @@ elseif($_GET['index'] == "video"){
 		else{ echo "INVALID VIDEO FILE";}
 }
 elseif($_GET['index'] == 'unlink' && isset($_GET['camera']) && isset($_GET['video'])){
-	@unlink($RootDir.$_GET['camera']."/".$_GET['video'].".mp4");
-	@unlink($RootDir.$_GET['camera']."/".$_GET['video'].".jpg");
+	@unlink($RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat);
+	@unlink($RootDir.$_GET['camera']."/".$_GET['video'].".".$IMGFormat);
 	header('Location: ./');
 }
 elseif($_GET['index'] == 'unlink' && $_GET['ALL'] == TRUE){
@@ -156,16 +158,16 @@ elseif($_GET['index'] == 'unlink' && $_GET['ALL'] == TRUE){
 		$dFiles = array();
 		
 		for ($i = 0; $i < count($Cameras); $i++){
-			$mFiles = getAllFiles($RootDir.$Cameras[$i],'mp4'); 
-			$jFiles = getAllFiles($RootDir.$Cameras[$i],'jpg'); 
+			$mFiles = getAllFiles($RootDir.$Cameras[$i],$VIDFormat); 
+			$jFiles = getAllFiles($RootDir.$Cameras[$i],$IMGFormat); 
 			for ($x = 0; $x < count($mFiles); $x++){
 				
 				//Only files older than 5 minutes to ensure no strays
-				$mtime = filemtime($RootDir.$Cameras[$i]."/".$mFiles[$x].".mp4");
+				$mtime = filemtime($RootDir.$Cameras[$i]."/".$mFiles[$x].".".$VIDFormat);
 				$now = time();
 				if(($now - $mtime) >= 300){
-					$dFiles[] = $RootDir.$Cameras[$i]."/".$mFiles[$x].".mp4";
-					$dFiles[] = $RootDir.$Cameras[$i]."/".$jFiles[$x].".jpg";
+					$dFiles[] = $RootDir.$Cameras[$i]."/".$mFiles[$x].".".$VIDFormat;
+					$dFiles[] = $RootDir.$Cameras[$i]."/".$jFiles[$x].".".$IMGFormat;
 				}
 			}
 		}
