@@ -7,7 +7,7 @@ $DateFormat = "Y-m-d H:i:s"; //FOR DISPLAY ONLY See PHP's date formatting for al
 $IMGFormat = "jpg"; //file extension of auto-generated images
 $VIDFormat = "mp4"; //file extension of auto-generated videos
 $FileCruft = "01_"; //If your generated-files contain any prefix prior to the date code enter it here.
-$PlaybackRate = "7"; //Default playback rate of the video file.
+$PlaybackRate = "5"; //Default playback rate of the video file.
 
 /* **********END CONFIGURATION ********** */
 clearstatcache();
@@ -78,12 +78,12 @@ $CameraFiles = getCameraFiles($Cameras, $RootDir, $VIDFormat);
 
 /* **********START DISPLAY ********** */
 
-if($_GET['index'] == "" || !isset($_GET['index'])){
+if(!isset($_GET['index'])){
 	css();
 	?><a class='unlink' align='center' href="./?index=unlink&ALL=TRUE">DELETE ALL</a>
 	<?php
 	for ($i = 0; $i < count($Cameras); $i++){
-		if(count($CameraFiles[$Cameras[$i]]) > 0){
+		if(@count($CameraFiles[$Cameras[$i]]) > 0){
 			echo "<table>";
 			echo "<th>". $Cameras[$i]." - ".count($CameraFiles[$Cameras[$i]])." </th><tr>";
 			//Displays timestamp
@@ -123,7 +123,7 @@ elseif($_GET['index'] == "video"){
 			echo date_format($DateStamp, $DateFormat)."<br />";
 			
 			?>
-			<video id="video" controls autoplay><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat?>" type="audio/mpeg"></video>
+			<video id="video" preload="auto" controls autoplay><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat?>" type="audio/mpeg"></video>
 			<script type="text/javascript">document.getElementById("video").playbackRate = <?php echo $PlaybackRate;?>;</script>
 			<br />
 			<align='center'><a href="./?index=unlink&camera=<?php echo $_GET['camera'];?>&video=<?php echo $_GET['video'];?>"> DELETE THIS</a></align>
