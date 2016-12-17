@@ -29,7 +29,7 @@ function getAllFiles( $outerDir , $x){
 
 //Loads all files into a nested array
 //Format of $CameraFiles[CAMERA_NAME][NUMERICAL_KEY] = filename (no ext)
-function getCameraFiles($Cameras, $RootDir){
+function getCameraFiles($Cameras, $RootDir, $VIDFormat){
 	for ($i = 0; $i < count($Cameras); $i++){
 			$tFiles = getAllFiles($RootDir.$Cameras[$i],$VIDFormat); 
 			for ($x = 0; $x < count($tFiles); $x++){
@@ -51,7 +51,7 @@ function scale_to_width ($filename, $targetwidth) {
    return $targetheight;
 }
 
-function dateFromFile($file){
+function dateFromFile($file, $FileCruft){
 	$file = ltrim($file, $FileCruft);
 	$date = date_create_from_format('YmdHis',$file);
 	return($date);
@@ -73,7 +73,7 @@ function css (){
 	<?php 
 }
 
-$CameraFiles = getCameraFiles($Cameras, $RootDir);
+$CameraFiles = getCameraFiles($Cameras, $RootDir, $VIDFormat);
 
 /* **********START DISPLAY ********** */
 
@@ -88,7 +88,7 @@ if($_GET['index'] == "" || !isset($_GET['index'])){
 			//Displays timestamp
 			for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
 				echo "<td>";
-				$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x]);
+				$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x], $FileCruft);
 				$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
 				echo date_format($DateStamp, $DateFormat);
 				echo "</td>";
@@ -115,7 +115,7 @@ elseif($_GET['index'] == "video"){
 		if(is_file($RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat)){
 			css();
 			
-			$DateStamp = dateFromFile($_GET['video']);
+			$DateStamp = dateFromFile($_GET['video'], $FileCruft);
 			$Future = clone $DateStamp;
 			$Past = clone $DateStamp;
 			
@@ -133,7 +133,7 @@ elseif($_GET['index'] == "video"){
 			for ($i = 0; $i < count($Cameras); $i++){
 				if($Cameras[$i] != $_GET['camera']){
 					for($x = 0; $x < count($CameraFiles[$Cameras[$i]]); $x++){
-						$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x]);
+						$DateStamp = dateFromFile($CameraFiles[$Cameras[$i]][$x], $FileCruft);
 						if($DateStamp < $Future && $DateStamp > $Past){
 							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
 							$tWidth = scale_to_width($RootDir.$Cameras[$i]."/".$CameraFiles[$Cameras[$i]][$x].".".$IMGFormat, 250);
