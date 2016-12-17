@@ -17,26 +17,47 @@ Video viewing is accomplished with built-in HTML5 video tags; so a modern(ish) b
 This is the base location of where you want scanning to occur.  It is assumed that INSIDE this location the directory tree looks similar to this:
 
 -./camera/
+
 |--CAM_FRONT_DOOR
+
 |----01_20161217113927.jpg
+
 |----01_20161217113927.mp4
+
 |----01_20161217105054.jpg
+
 |----01_20161217105054.mp4
+
 |----01_20161217100705.jpg
+
 |----01_20161217100705.mp4
+
 |--CAM_BACK_DOOR
+
 |----01_20161217113927.jpg
+
 |----01_20161217113927.mp4
+
 |----01_20161217100705.jpg
+
 |----01_20161217100705.mp4
+
 |--CAM_GARAGE_DOOR
+
 |----01_20161217113927.jpg
+
 |----01_20161217113927.mp4
+
 |----01_20161217105054.jpg
+
 |----01_20161217105054.mp4
+
 |--CAM_GARAGE_INT
+
 |----01_20161217113927.jpg
+
 |----01_20161217113927.mp4
+
 
 To put it another way; `$RootDir` contains folders for each of your cameras.  Inside each camera folder are the video and image files associated.  Folders INSIDE the camera folders are NOT processed however ANY FOLDER IMMEDIATELY INSIDE `$RootDir` is, so do not place other folders with images or video files inside this location.
 
