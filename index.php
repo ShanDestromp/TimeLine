@@ -7,6 +7,7 @@ $DateFormat = "Y-m-d H:i:s"; //FOR DISPLAY ONLY See PHP's date formatting for al
 $IMGFormat = "jpg"; //file extension of auto-generated images
 $VIDFormat = "mp4"; //file extension of auto-generated videos
 $FileCruft = "01_"; //If your generated-files contain any prefix prior to the date code enter it here.
+$PlaybackRate = "7"; //Default playback rate of the video file.
 
 /* **********END CONFIGURATION ********** */
 clearstatcache();
@@ -59,7 +60,7 @@ function dateFromFile($file, $FileCruft){
 
 function css (){
 	?><style>
-	.video {
+	#video {
 		width: 50%    !important;
 		height: auto   !important;
 	}
@@ -121,7 +122,9 @@ elseif($_GET['index'] == "video"){
 			
 			echo date_format($DateStamp, $DateFormat)."<br />";
 			
-			?><video class="video" controls><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat?>" type="audio/mpeg"></video>
+			?>
+			<video id="video" controls autoplay><source src="<?php echo $RootDir.$_GET['camera']."/".$_GET['video'].".".$VIDFormat?>" type="audio/mpeg"></video>
+			<script type="text/javascript">document.getElementById("video").playbackRate = <?php echo $PlaybackRate;?>;</script>
 			<br />
 			<align='center'><a href="./?index=unlink&camera=<?php echo $_GET['camera'];?>&video=<?php echo $_GET['video'];?>"> DELETE THIS</a></align>
 			<div class="related">
