@@ -16,48 +16,29 @@ Video viewing is accomplished with built-in HTML5 video tags; so a modern(ish) b
 
 This is the base location of where you want scanning to occur.  It is assumed that INSIDE this location the directory tree looks similar to this:
 
+```
 -./camera/
-
 |--CAM_FRONT_DOOR
-
 |----01_20161217113927.jpg
-
 |----01_20161217113927.mp4
-
 |----01_20161217105054.jpg
-
 |----01_20161217105054.mp4
-
 |----01_20161217100705.jpg
-
 |----01_20161217100705.mp4
-
 |--CAM_BACK_DOOR
-
 |----01_20161217113927.jpg
-
 |----01_20161217113927.mp4
-
 |----01_20161217100705.jpg
-
 |----01_20161217100705.mp4
-
 |--CAM_GARAGE_DOOR
-
 |----01_20161217113927.jpg
-
 |----01_20161217113927.mp4
-
 |----01_20161217105054.jpg
-
 |----01_20161217105054.mp4
-
 |--CAM_GARAGE_INT
-
 |----01_20161217113927.jpg
-
 |----01_20161217113927.mp4
-
+```
 
 To put it another way; `$RootDir` contains folders for each of your cameras.  Inside each camera folder are the video and image files associated.  Folders INSIDE the camera folders are NOT processed however ANY FOLDER IMMEDIATELY INSIDE `$RootDir` is, so do not place other folders with images or video files inside this location.
 
@@ -99,5 +80,6 @@ Deleting files is relatively unchecked.  It will not allow bulk deletions of fil
 Furthermore there is next to no security implimented, with liberal usage of $_GET variables.  A nefarious individual *could* leverage this to delete un-intended files although it's unlikely due to the way the deletion code is written.  The bulk delete command however could be ran by anyone 
 
 #SCREENSHOTS
-[alt text](https://github.com/shandestromp/TimeLine/screenshots/index.jpg "Main Index Page")
-[alt text](https://github.com/shandestromp/TimeLine/screenshots/related.jpg "Playback and Related Page")
+[Main Index Page](https://github.com/ShanDestromp/TimeLine/blob/master/screenshots/index.png "Main Index Page")
+
+[Playback Showing Related](https://github.com/ShanDestromp/TimeLine/blob/master/screenshots/related.png "Playback and Related Page")
